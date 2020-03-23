@@ -1,0 +1,22 @@
+
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Popular Film List</h1>
+    <label for="num_film">Enter number of film: </label>
+    <input id="val_film" type="number" name="name_field" value="2">
+    <input type="submit" value="OK">
+
+    {% if movieviewsperweek_list %}
+    <ul>
+      {% for film in movieviewsperweek_list %}
+      <li>
+        <h5>Title of the movie: <i>{{ film.film}}</i></h5>
+        <h5>Date: <i>{{ film.data }}</i></h5>
+        <h5>Count of views: <i>{{ film.count_views }}</i></h5>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p>There are no popular films in the cinema.</p>
+    {% endif %}
+{% endblock %}

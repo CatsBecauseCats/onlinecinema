@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Personas:</h1>
+    {% if persona_list %}
+    <ul>
+      {% for person in persona_list %}
+      <li>
+        <h5> <i>{{ person.first_name }} {{ person.last_name }}</i></h5>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p>There are no person in the cinema.</p>
+    {% endif %}
+
+{% endblock %}

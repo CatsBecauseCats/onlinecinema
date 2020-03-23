@@ -1,0 +1,40 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <form action="{% url 'filter' %}" method="get">
+    <h1>Film List</h1>
+    <div>
+        <h3>Режисеры:</h3>
+        <ul>
+            {% for film in view.get_director %}
+                <li class="editContent">
+                    <input type="checkbox" class="checked" name="creator_name" value="{{ film.creator_name }}">
+                    <span class="span editContent">{{ film.creator_name }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <button type="submit">Найти</button>
+     <form/>
+     <h5>Фильтры: </h5>
+    <a href=""><button>Актер</button></a>
+    <a href=""><button>Режисер</button></a>
+    <a href=""><button>Год</button></a>
+    {% if film_list %}
+    <ul>
+      {% for film in film_list %}
+      <li>
+        <h5>Title of the movie: <i>{{ film.film_name }}</i></h5>
+        <h5>Director: <i>{{ film.creator_name }}</i></h5>
+        <h5>The film's release: <i>{{ film.year.year }}</i></h5>
+        <h5>Actors:</h5>
+        {% for actors in film.actors.all %}
+          <ul><h5><i>{{actors}}</i></h5></ul>
+        {% endfor %}
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p>There are no films in the cinema.</p>
+    {% endif %}
+
+{% endblock %}
