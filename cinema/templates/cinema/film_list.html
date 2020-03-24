@@ -3,23 +3,20 @@
 {% block content %}
     <form action="{% url 'filter' %}" method="get">
     <h1>Film List</h1>
-    <div>
-        <h3>Режисеры:</h3>
-        <ul>
-            {% for film in view.get_director %}
-                <li class="editContent">
-                    <input type="checkbox" class="checked" name="creator_name" value="{{ film.creator_name }}">
-                    <span class="span editContent">{{ film.creator_name }}</span>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <button type="submit">Найти</button>
+        <div>
+            <h3>Режисеры:</h3>
+            <ul>
+                {% for film in view.get_director %}
+                    <li class="editContent">
+                        <input type="checkbox" class="checked" name="creator_name" value="{{ film.creator_name }}">
+                        <span class="span editContent">{{ film.creator_name }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <button type="submit">Найти</button>
      <form/>
-     <h5>Фильтры: </h5>
-    <a href=""><button>Актер</button></a>
-    <a href=""><button>Режисер</button></a>
-    <a href=""><button>Год</button></a>
+
     {% if film_list %}
     <ul>
       {% for film in film_list %}

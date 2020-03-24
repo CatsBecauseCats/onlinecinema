@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from .models import Persona, Film, MovieViewsPerWeek
-
+from datetime import timedelta, datetime
 
 def index(request):
 
@@ -34,43 +34,34 @@ class PopularFilmListView(DirectorYearActor, generic.ListView):
 class PersonsListView(generic.ListView):
     model = Persona
 
+# Здесь пока только фильтрация по режиссеру(вылетает ошибка)
+# Пока нет фильтрации по актеру и году, поскольку это  будеет выглядеть похожим образом
+# Вопрос: как сделать при выводе в httml чекбокс-режиссер уникальным?
 class FilterMoviesView(DirectorYearActor, generic.ListView):
-    """Фильтр фильмов"""
-
     def get_queryset(self):
         queryset = Film.objects.filter(
             creator_name__in=self.request.GET.getlist("creator_name"))
         return queryset
-    '''
+
+# Попытка убрать повтрорения из чекбокса
+class UnicCreator(generic.ListView):
+    model = Film
+    context_object_name = 'creator_name'
+    template_name = "cinema/film_list.html"
+
     def get_queryset(self):
-        return Film.objects.filter(year=1992)[:4]
-    '''
+        return Film.objects.order_by().values('creator_name').distinct()
+
+# Не работает совсем (вывод N самых популярных фильмов за последние 4 недели)
 '''
-def film_filter(request, pk):
-    """ Фильтр статей по дате
-    """
-    films = PopularFilmListView.object_list()
-    if pk == 2:
-        now = datetime.now() - timedelta(minutes=60 * 24 * 30)
-        films = films.filter(created__gte=now)
-
-    return render(request, "cinema/movieviewsperweek_list.html", {"films": films})
+class FilterFilmListView(generic.ListView):
+    model = Film
+    context_object_name = 'count_views'
+    now = datetime.now() - timedelta(minutes=60 * 24 * 30) # Берем данные за последний месяц
+    films = Film.objects.filter(created__gte=now) # Вылетает тут - нужно будет для запуска обернуть в movieviewsperweek_list
+                                                  # строки 7-9 в <form action="{% url 'filter' %}" method="get"><form/>
+    queryset = Film.objects.filter()[:5]  # Получение 5 просмотренных фильмов
+                                          # (в дальнейшем вместо 5 будет N, берущееся из поля по нажатию кнопки
+                                          # в movieviewsperweek_list.html)
+    template_name = 'cinema/movieviewsperweek_list.html'  # Определение имени шаблона и его расположения
 '''
-
-
-'''
-def my_filter(self, id_button):
-    film = Film.objects.all()
-    if id_button == 1:
-        now = datetime.now() - timedelta(minutes=60 * 24 * 7)
-        film = film.filter(created__gte=now)
-    elif id_button == 2:
-        now = datetime.now() - timedelta(minutes=60 * 24 * 30)
-        news = film.filter(created__gte=now)
-    elif id_button == 3:
-        news = film
-
-    return render(self.request, "news/news_list.html", {"news": news})
-'''
-
-#Book.objects.filter(title__icontains='war')[:5]  # Получить 5 книг, содержащих 'war' в заголовке
